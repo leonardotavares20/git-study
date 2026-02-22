@@ -101,3 +101,16 @@ Nesse diretório tem um conjunto de arquivos que representam os objetos do Git, 
 
 - tree é a maneira do git armazenar um diretório.
 - blob é a maneira do git armazenar um arquivo.
+
+o fluxo pra você ver o conteudo de um arquivo com ``git cat-file`` é:
+
+```git log --oneline```
+```git cat-file -p <hash do tree do commit>```
+```git cat-file -p <hash do blob do arquivo>```
+
+### Storing Data
+
+Git armazena um snapshot inteiro dos arquivos `per-commit` level. E não somente as mudanças que você fez em cada commit. E sim como que um status do repositorio como um todo no momento do commit. Mas ele não armazenas os arquivos em si, ele armazena um ponteiro para o arquivo, ele armazena todas as referencias daquele arquivo.
+
+- Git comprime e embala(faz um pack dos arquivos) para armazenar esses arquivos de uma forma mais eficiente.
+- Git duplica arquivos que tem mais de um commit que referencia eles. Se um arquivos não tem uma mudança entre os commits, o Git armazena apenas uma cópia do arquivo.
