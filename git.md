@@ -110,7 +110,6 @@ git cat-file -p <hash do tree do commit>
 git cat-file -p <hash do blob do arquivo>
 ```
 
-
 ### Storing Data
 
 Git armazena um snapshot inteiro dos arquivos `per-commit` level. E não somente as mudanças que você fez em cada commit. E sim como que um status do repositorio como um todo no momento do commit. Mas ele não armazenas os arquivos em si, ele armazena um ponteiro para o arquivo, ele armazena todas as referencias daquele arquivo.
@@ -224,3 +223,110 @@ Provavelmente em 90% do tempo você deva usar o arquivo de configuração global
 Se você configurar um arquivo numa location específica, essa configuração vai substituir a configuração de uma location geral. Por exemplo, se você configurar ```user.name``` na configuração local, ele vai substituir o ```user.name``` na configuração global. Ou seja quanto mais específico, mais ele substitui a configuração geral anterior.
 
 ![Representação visual das locations e overrides do git](./img/config.png)
+
+## Branches
+
+Uma branch no git te permite manter o track de diferentes mudanças no seu projeto separadamente.
+
+Por exemplo, vamos dizer que você tem um grande projeto, no qual você quer experimentar uma nova paleta de cores. Em vez de mudar o projeto inteiro diretamente, você pode criar uma nova branch chamada ```nova-paleta``` e fazer as alterações lá.  Isso permite que você teste a nova paleta sem afetar o código principal do projeto. Quando você terminar, se estiver satisfeito com as mudanças, você pode mesclar (```merge```) a branch ```nova-paleta``` com a branch principal do projeto. Se você não estiver satisfeito, você pode simplesmente descartar a branch ```nova-paleta``` e continuar trabalhando na branch principal.
+
+### O que é uma branch?
+
+Na tradução literal, branch significa "ramo". No desenvolvimento de software ela tem o mesmo significado, branch é uma ramificação(ramo) do seu projeto.
+
+Uma branch nada mais é, que um ponteiro nomeado para um commit específico. Quando você cria uma branch, você está criando um novo ponteiro para um commit específico.
+
+Devido a branch ser só um ponteiro de um commit, criar uma nova branch é algo que não tem um custo elevado em performace, pelo contrário, elas são "leves" e "baratas". Quando você cria uma branch, você não está criando 10 copias do seu projeto no disco do seu computador, apenas um ponteiro para um commit específico.
+
+```branch tips``` - é o último commit de uma branch, ou seja o ponto mais recente no qual você estava trabalhando.
+
+![git branch](./img/branch.png)
+
+### Trabalhando com branches
+
+- Default branch
+
+A branch padrão é a branch que é criada quando você inicializa um repositório com ```git init```. Ela é chamada de ```main``` ou ```master```. Se você estiver trabalhando com github, é recomendado usar ```main``` como branch padrão.
+
+- Checando a branch atual
+
+Para checar qual a sua branch atual, você pode usar o comando ```git branch``` sem nenhum argumento. Isso mostrará todas as branches existentes no seu repositório local, com a branch atual marcada com um asterisco.
+
+```bash
+git branch
+```
+- Criando uma nova branch
+
+Para criar uma nova branch, você pode usar o comando ```git branch``` seguido do nome da branch que você deseja criar. Por exemplo:
+
+```bash
+git branch nova-branch
+```
+
+Isso criará uma nova branch chamada ```nova-branch``` que aponta para o mesmo commit que a branch atual.
+
+**Se você quiser criar uma branch e ir diretamente pra ela, você pode simplismente usar o comando:**
+
+```bash
+git switch -c nova-branch
+```
+
+Quando você cria uma nova branch, ela usa o commit atual como ponto de partida. Por exemplo, se você estiver na branch ```main``` e tiver commits ```A```, ```B``` e ```C```, e você criar uma nova branch ```nova-branch```, ela apontará para o commit ```C```.
+
+Exemplo de como sua branch deve ficar:
+
+```
+A - B - C
+         \
+          nova-branch
+```
+
+- Alternando para uma branch existente
+
+Para alternar para uma branch existente, você pode usar o comando ```git switch``` seguido do nome da branch que você deseja alternar. Por exemplo:
+
+```bash
+git switch nova-branch
+```
+
+Isso alternará para a branch ```nova-branch``` e atualizará seu diretório de trabalho para refletir as mudanças nessa branch.
+
+- Excluindo uma branch
+
+Para excluir uma branch, você pode usar o comando ```git branch -d``` seguido do nome da branch que você deseja excluir. Por exemplo:
+
+```bash
+git branch -d nova-branch
+```
+
+Isso excluirá a branch ```nova-branch``` do seu repositório local.
+
+- Renomeando uma branch
+
+Para renomear uma branch, você pode usar o comando ```git branch -m``` seguido do nome antigo e do novo nome da branch. Por exemplo:
+
+```bash
+git branch -m nome-antigo-branch novo-nome-branc
+```
+
+Isso renomeará a branch ```nova-branch``` para ```branch-renomeada```.
+
+### Visualizando branches
+
+O git tem a sua forma de visualizar branches por meio de texto. Por exemplo:
+
+```bash
+A - B - C  main
+```
+
+Isso significa que o commit ```C``` é o último commit na branch ```main```, e os commits ```A``` e ```B``` são seus commits anteriores.
+
+Para representar multiplas branches, o git usa uma notação de linha de tempo. Por exemplo:
+
+```bash
+A - B - C  main
+     \
+      D - E  feature
+```
+
+Isso significa que a branch ```feature``` foi criada a partir da branch ```main```, tendo como ponteiro o commit ```B```, e tem dois commits adicionais ```D``` e ```E```.
