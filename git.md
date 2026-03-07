@@ -236,7 +236,7 @@ Na tradução literal, branch significa "ramo". No desenvolvimento de software e
 
 Uma branch nada mais é, que um ponteiro nomeado para um commit específico. Quando você cria uma branch, você está criando um novo ponteiro para um commit específico.
 
-Devido a branch ser só um ponteiro de um commit, criar uma nova branch é algo que não tem um custo elevado em performace, pelo contrário, elas são "leves" e "baratas". Quando você cria uma branch, você não está criando 10 copias do seu projeto no disco do seu computador, apenas um ponteiro para um commit específico.
+Devido a branch ser só um ponteiro de um commit, criar uma nova branch é algo que não tem um custo elevado em performace, pelo contrário, elas são "leves" e "baratas". Quando você cria 10 branches, você não está criando 10 copias do seu projeto no disco do seu computador, apenas um ponteiros para um commit específico.
 
 ```branch tips``` - é o último commit de uma branch, ou seja o ponto mais recente no qual você estava trabalhando.
 
@@ -330,3 +330,9 @@ A - B - C  main
 ```
 
 Isso significa que a branch ```feature``` foi criada a partir da branch ```main```, tendo como ponteiro o commit ```B```, e tem dois commits adicionais ```D``` e ```E```.
+
+- Git Files
+
+Lembrando que o Git guarda todas as informações do seu projeto, incluindo branches, commits e arquivos, no subdiretório ```.git``` no root do seu projeto. Os "heads" das branches são armazenados no diretório ```.git/refs/heads/```. Se você acessar um desses arquivos, você verá o hash do commit que é o ponteiro da branch.
+
+## Merge
