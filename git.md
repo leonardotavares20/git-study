@@ -336,3 +336,95 @@ Isso significa que a branch ```feature``` foi criada a partir da branch ```main`
 Lembrando que o Git guarda todas as informações do seu projeto, incluindo branches, commits e arquivos, no subdiretório ```.git``` no root do seu projeto. Os "heads" das branches são armazenados no diretório ```.git/refs/heads/```. Se você acessar um desses arquivos, você verá o hash do commit que é o ponteiro da branch.
 
 ## Merge
+
+Quando você está trabalhando em uma branch, seja uma nova feature, a correção de um bug ou qualquer outro tipo de coisa, em algum momento se estiver satisfeito com o resultado, você provavelmente vai querer mesclar (merge) essa branch com a branch principal (geralmente ```main``` ou ```master```). O merge é o processo de unir as alterações de uma branch com outra.
+
+Então vamos dizer que você está em um estado que você tem duas branches, cada uma com commits únicos.
+
+```bash
+A - B - C - main
+     \
+      D - E  feature
+```
+
+Se você mergear a branch ```feature``` com a branch ```main```, o Git combina as duas branches, criando um novo commit que tem o histórico das duas branches, no diagrama ```F``` é um ````merge commit````, que tem ```C``` e ```E``` como parentes. O commit ```F``` traz todas as mudanças dos commits ```D``` e ```E``` para a branch ```main```:
+
+```bash
+A - B - C - F main
+     \     /
+      D - E  feature
+```
+
+### Merge Commits
+
+Quando estamos mergeando duas branches com históricos divergentes, assim como no exemplo abaixo
+
+```bash
+A - B - C - main
+     \
+      D - E  feature
+```
+
+o Git cria um merge commit que é o único com dois parentes. 
+- **1** - Primeiro é necessário encontrar o ```merge base``` aka ```best common ancestor```, é o ancestral mais recente que as duas branches tem em comum no exemplo acima é o commit ```B```. 
+- **2** - Em seguida o Git coloca os commits da branch ```main``` no ```merge commit```, e após isso os commits da branch ```feature``` são adicionados. 
+- **3** - Quando todas as mudanças são incorporadas, o merge commit é criado e colocado na branch ```main```. Nesse caso seria o commit ```F```. Ele tem dois parentes apontando para os commits ```C``` e ```E```.
+
+```bash
+A - B - C - F main
+     \     /
+      D - E  feature
+```
+
+Para mergear a branch  ```feature``` com a branch ```main```, você pode usar o comando ```git merge```:
+
+```bash
+git merge feature
+```
+
+### Merge Log
+
+Se você quiser visualizar o log de um merge commit, de forma mais detalhada, você pode utilizar o comando ```git log```, e usar os parâmetros ```--oneline --graph --decorate --parents```:
+
+- ```--oneline``` - retorna uma visão condensada do histórico de commits, os hashes dos commits são abreviados para 7 caracteres, que é a quantia mínima que o git requer para especificar um hash.
+- ```--graph``` - desenha todas as linhas do grafo de commits, mostrando como os commits divergiram, e retornaram a linha principal por meio de um merge commit.
+- ```--decorate``` - mostra rótulos de branches e tags
+- ```--parents``` - mostra os parentes de cada commit
+
+```bash
+git log --oneline --graph --decorate --parents
+```
+
+### Fast Forward Merge
+
+O tipo mais simples de merge é o "fast forward merge".
+
+Vamos dizer que você vai adicionar uma feature no projeto:
+
+```bash
+A - B - main
+     \    
+      C -  feature
+```
+
+E você rodar o comando ```git merge feature```:
+
+```bash
+git merge feature
+```
+
+Por causa que a branch `feature` tem todos os commits que a branch `main` tem, o Git pode simplesmente avançar a branch `main` para o commit mais recente da branch `feature`, sem criar um merge commit. Isso é chamado de "fast forward merge".
+
+Ele automaticamente faz um ```fast forward merge```. Ele simplismente move o ponteiro da base da branch `main` para o commit mais recente da branch `feature`.
+
+Quando o merge é feito em uma branch que está atualizada com a branch de destino, o Git pode simplesmente avançar a branch para o commit mais recente da branch de destino, sem criar um merge commit. Isso é chamado de "fast forward merge".
+
+Então o diagrama final seria:
+
+```bash
+A - B - C - main
+```
+
+Porque o Git fez um fast forward merge, ele não criou um merge commit.
+
+## Rebase
