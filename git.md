@@ -407,7 +407,7 @@ A - B - main
       C -  feature
 ```
 
-E você rodar o comando ```git merge feature```:
+E você rodar o comando:
 
 ```bash
 git merge feature
