@@ -20,7 +20,7 @@ Untracked files:
 nothing added to commit but untracked files present (use "git add" to track)
 ```
 
-- ```git add``` -- adiciona um arquivo ou diretório ao stage, ele marca o arquivo para ser incluído no próximo commit,  você pode passar um arquivo ou diretório como argumento para adicionar um arquivo específico. Você também pode somente passar logo após o comando ```git add``` um ```.``` pra adicionar todos os arquivos não trackeados. A resposta retornada pro exemplo: ```git status git.md```, após o comando ```git add git.md``` 
+- ```git add``` -- adiciona um arquivo ou diretório ao stage, ele marca o arquivo para ser incluído no próximo commit,  você pode passar um arquivo ou diretório como argumento para adicionar um arquivo específico. Você também pode somente passar logo após o comando ```git add``` um ```.``` pra adicionar todos os arquivos não trackeados, arquivos modificados e arquivos deletados. A resposta retornada pro exemplo: ```git status git.md```, após o comando ```git add git.md``` 
 
 ```
 On branch master
@@ -82,13 +82,13 @@ Date:   Tue Jan 20 15:12:28 2026 -0300
 
 ### Variações:
 
-- ```git log --no-pager log -n 10``` -- limita o maximo de commits a serem exibidos, - por exemplo, ```git --no-pager log -n 10``` limita a exibição de 10 commits.
+- ```git --no-pager log -n 10``` -- limita o maximo de commits a serem exibidos, - por exemplo, ```git --no-pager log -n 10``` limita a exibição de 10 commits.
 
-- ```git log --no-pager log -n 10 --oneline``` -- mostra apenas a mensagem e o hash do commit com a limitação de 10 commits.
+- ```git --no-pager log -n 10 --oneline``` -- mostra apenas a mensagem e o hash do commit com a limitação de 10 commits.
 
-- ```git log --no-pager log -n 10 --oneline --graph``` -- mostra apenas a mensagem e o hash do commit com a limitação de 10 commits e um grafico de commits.
+- ```git --no-pager log -n 10 --oneline --graph``` -- mostra apenas a mensagem e o hash do commit com a limitação de 10 commits e um grafico de commits.
 
-- ```git log --no-pager log -n 10 --oneline --parents``` -- mostra apenas a mensagem e o hash do commit com a limitação de 10 commits e os pais do commit.
+- ```git --no-pager log -n 10 --oneline --parents``` -- mostra apenas a mensagem e o hash do commit com a limitação de 10 commits e os pais do commit.
 
 ## Internals
 
@@ -112,16 +112,16 @@ git cat-file -p <hash do blob do arquivo>
 
 ### Storing Data
 
-Git armazena um snapshot inteiro dos arquivos `per-commit` level. E não somente as mudanças que você fez em cada commit. E sim como que um status do repositorio como um todo no momento do commit. Mas ele não armazenas os arquivos em si, ele armazena um ponteiro para o arquivo, ele armazena todas as referencias daquele arquivo.
+Git armazena um snapshot inteiro dos arquivos `per-commit` level. E não somente as mudanças que você fez em cada commit. E sim como que um status do repositorio como um todo no momento do commit. Mas ele não armazena múltiplas cópias do mesmo arquivo se ele não mudou.
 
 - Git comprime e embala(faz um pack dos arquivos) para armazenar esses arquivos de uma forma mais eficiente.
-- Git duplica arquivos que tem mais de um commit que referencia eles. Se um arquivos não tem uma mudança entre os commits, o Git armazena apenas uma cópia do arquivo.
+- Se os arquivos não tem mudanças entre os commits, o Git armazena apenas uma cópia do arquivo.
 
 ## Git config
 
 Git armazena informações sobre o autor, então quando você faz um commit, o Git pode trackear quem fez aquela mudança ou commit. Para atualizar suas configurações globais do git você pode usar: 
-- ```git config --add global user.name "Seu Nome"```
-- ```git config --add global user.email "Seu Email```
+- ```git config --add --global user.name "Seu Nome"```
+- ```git config --add --global user.email "Seu Email"```
 
 ### Significado das configurações
 
@@ -161,8 +161,8 @@ Você pode usar o comando ```--unset``` para remover uma configuração específ
 
 Exemplo: ```git config --unset --local user.name```
 
-- ```bash--unset-all <key>``` - Flag que remove todas as instâncias de uma key da sua configuração.
-- exemplo: ```bash--unset-all example.key```
+- ```git config --unset-all <key>``` - Flag que remove todas as instâncias de uma key da sua configuração.
+- exemplo: ```git config --unset-all <key>```
 
 ### Duplicates
 
@@ -218,7 +218,7 @@ Existem vários lugares onde o Git pode ser configurado, desde o arquivo de conf
 - **local**: ```.git/config```, um arquivo que configura o Git para um repositório específico.
 - **worktree**: ```.git/config.worktree```, um arquivo que configura o Git para uma parte de um projeto.
 
-Provavelmente em 90% do tempo você deva usar o arquivo de configuração global(```--local```) para configurar suas preferências pessoais como nome e email, e 9% para o arquivo de configuração local(```--local```) para configurar suas preferências de repositório na maioria do tempo. 1% para o arquivo de configuração worktree(```--worktree```), mas é bem raro.
+Provavelmente em 90% do tempo você deva usar o arquivo de configuração global(```--global```) para configurar suas preferências pessoais como nome e email, e 9% para o arquivo de configuração local(```--local```) para configurar suas preferências de repositório na maioria do tempo. 1% para o arquivo de configuração worktree(```--worktree```), mas é bem raro.
 
 Se você configurar um arquivo numa location específica, essa configuração vai substituir a configuração de uma location geral. Por exemplo, se você configurar ```user.name``` na configuração local, ele vai substituir o ```user.name``` na configuração global. Ou seja quanto mais específico, mais ele substitui a configuração geral anterior.
 
@@ -306,7 +306,7 @@ Isso excluirá a branch ```nova-branch``` do seu repositório local.
 Para renomear uma branch, você pode usar o comando ```git branch -m``` seguido do nome antigo e do novo nome da branch. Por exemplo:
 
 ```bash
-git branch -m nome-antigo-branch novo-nome-branc
+git branch -m nome-antigo-branch novo-nome-branch
 ```
 
 Isso renomeará a branch ```nova-branch``` para ```branch-renomeada```.
@@ -428,3 +428,26 @@ A - B - C - main
 Porque o Git fez um fast forward merge, ele não criou um merge commit.
 
 ## Rebase
+
+O rebase é uma operação do git que te permite reaplicar os commits de uma branch, para o ```tip```, ou a ponta da branch de destino. Diferente do ``merge``, o rebase não cria um merge commit. Então o histórico da branch de destino fica mais linear, justamente porque ele não adiciona uma nova camada de commits, ele simplesmente "reescreve" o histórico de commits. O histórico ficaria parecido com isso:
+
+Antes:
+
+```bash
+A - B - C - main
+     \    
+      D - E  feature
+```
+
+Depois de rodar `git rebase main` na branch `feature`:
+
+```bash
+A - B - C - main
+          \ - D' - E'  feature
+```
+
+Nesse processo o git:
+- 1 - encontra o ponto em comum entre as duas branches(merge base)
+- 2 - pega os commits da branch atual
+- 3 - move temporariamente o ponteiro
+- 4 - reaplica esses commits para o topo da branch de destino
