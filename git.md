@@ -224,6 +224,31 @@ Se você configurar um arquivo numa location específica, essa configuração va
 
 ![Representação visual das locations e overrides do git](./img/config.png)
 
+## HEAD
+
+No Git, o `HEAD` é um ponteiro especial que indica qual é o commit atual no seu diretório de trabalho. Você pode pensar nele como a sua "posição atual" ou "onde você está agora" no histórico do repositório.
+
+Em situações normais, o `HEAD` aponta para a branch local em que você fez checkout (por exemplo, `main` ou `master`). Esta branch, por sua vez, aponta para o commit mais recente feito nela.
+
+### Detached HEAD (HEAD Desanexado)
+
+Se você usar o comando de alternância diretamente para um commit específico (usando o hash desse commit) em vez de usar o nome de uma branch, você entrará em um estado conhecido como **Detached HEAD**.
+
+```bash
+# Alternando diretamente para um commit
+git switch --detach 33ff827
+# Ou no método clássico:
+git checkout 33ff827
+```
+
+Nesse estado de "HEAD desanexado", o `HEAD` aponta diretamente para um commit específico e não para uma branch. Qualquer novo commit que você fizer a partir daqui não pertencerá a nenhuma branch visível e poderá ser perdido (apagado pelo "garbage collector" do Git) futuramente quando você mudar para outra branch ativa.
+
+Caso você faça modificações nesse estado e deseje salvá-las, precisará criar uma nova branch apontando para o seu `HEAD` atual:
+
+```bash
+git switch -c nome-da-nova-branch
+```
+
 ## Branches
 
 Uma branch no git te permite manter o track de diferentes mudanças no seu projeto separadamente.
@@ -429,7 +454,7 @@ Porque o Git fez um fast forward merge, ele não criou um merge commit.
 
 ## Rebase
 
-O rebase é uma operação do git que te permite reaplicar os commits de uma branch, para o ```tip```, ou a ponta da branch de destino. Diferente do ``merge``, o rebase não cria um merge commit. Então o histórico da branch de destino fica mais linear, justamente porque ele não adiciona uma nova camada de commits, ele simplesmente "reescreve" o histórico de commits. O histórico ficaria parecido com isso:
+O rebase é uma operação do git que te permite reaplicar os commits de uma branch, para o ```tip```, ou a ponta da branch de destino. Diferente do ``merge``, o rebase não cria um merge commit. Então o histórico da branch de destino fica mais linear, justamente porque ele não adiciona uma nova camada de commits, ele simplesmente "reescreve" o histórico  de commits. O histórico ficaria parecido com isso:
 
 Antes:
 
