@@ -476,3 +476,7 @@ Nesse processo o git:
 - 2 - pega os commits da branch atual
 - 3 - move temporariamente o ponteiro
 - 4 - reaplica esses commits para o topo da branch de destino
+
+Uma vantagem do merge é que ele preserva o histórico verdadeiro do projeto. Ele mostra quando, onde e como as branches foram mergeadas. Uma desvantagem é que isso cria uma grande quantidade de commits, o que pode tornar o histórico mais difícil de ler e entender.
+
+Um histórico linear geralmente é mais facil de ler, entender e trabalhar com.
