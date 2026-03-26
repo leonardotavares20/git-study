@@ -20,7 +20,11 @@ Untracked files:
 nothing added to commit but untracked files present (use "git add" to track)
 ```
 
-- ```git add``` -- adiciona um arquivo ou diretório ao stage, ele marca o arquivo para ser incluído no próximo commit,  você pode passar um arquivo ou diretório como argumento para adicionar um arquivo específico. Você também pode somente passar logo após o comando ```git add``` um ```.``` pra adicionar todos os arquivos não trackeados, arquivos modificados e arquivos deletados. A resposta retornada pro exemplo: ```git status git.md```, após o comando ```git add git.md``` 
+## Staging Area
+
+O "Staging Area" (ou área de preparação) é um passo intermediário entre o seu diretório de trabalho (onde você edita os arquivos) e o repositório Git (onde os commits são armazenados). Quando você modifica arquivos, o Git não os inclui automaticamente no próximo commit. Primeiro, você deve adicioná-los ao staging area usando o comando `git add`.
+
+ ```git add``` -- adiciona um arquivo ou diretório ao stage, ele marca o arquivo para ser incluído no próximo commit,  você pode passar um arquivo ou diretório como argumento para adicionar um arquivo específico. Você também pode somente passar logo após o comando ```git add``` um ```.``` pra adicionar todos os arquivos não trackeados, arquivos modificados e arquivos deletados. A resposta retornada pro exemplo: ```git status git.md```, após o comando ```git add git.md``` 
 
 ```
 On branch master
@@ -32,6 +36,24 @@ Changes to be committed:
 	new file:   git.md
 
 ```
+
+### Removendo um arquivo do Staging Area
+
+Se você adicionou um arquivo ao staging area por engano (usando `git add`), mas ainda não fez o commit, você pode removê-lo de lá (fazer o *unstage*) sem perder as modificações que você fez no arquivo em si.
+
+Para remover um arquivo do staging area, você pode usar o comando `git restore`:
+
+```bash
+git restore --staged <nome-do-arquivo>
+```
+
+*(Nota: O próprio comando `git status` costuma sugerir esse comando quando há arquivos no stage.)*
+
+Isso tira o arquivo da área de preparação, mudando seu status de volta para modificado (ou untracked, se for um arquivo novo), mas **mantém todas as alterações** feitas no seu disco. 
+
+Se você quiser descartar as alterações do arquivo de forma definitiva (apagar o que editou e voltar pro estado do último commit), você remove a flag `--staged` e o comando seria `git restore <nome-do-arquivo>`.
+
+## Commit
 
 - ```git commit -m``` -- um commit é como uma fotografia do seu repositorio, em um determinado ponto no tempo. Git não armazena as diferenças, o git guarda todo histórico por commit. Pra realizar um commit, você deve executar o comando ```git commit -m "mensagem do commit"```. A mensagem retornada é:
 
@@ -48,6 +70,7 @@ On branch master
 nothing to commit, working tree clean
 ```
 
+
 logo após o commit, rodando o comando ```git log --oneline```
 
 ```bash
@@ -56,6 +79,8 @@ logo após o commit, rodando o comando ```git log --oneline```
 ```
 
 - ```git commit --amend``` -- se você errou a mensagem do seu ultimo commit, você pode corrigir com o comando ```git commit --amend -m "nova mensagem"```
+
+## Git Log
 
 - ```git log``` -- em um projeto provavelmente você vai ter uma longa lista de commits. Pra visualizar esse historico de commits, você pode usar o comando ```git log```, que mostra uma lista de commits com informações como data, autor e mensagem. Você também pode usar o comando ```git log --oneline``` para mostrar apenas a mensagem e o hash do commit.
 
@@ -89,6 +114,9 @@ Date:   Tue Jan 20 15:12:28 2026 -0300
 - ```git --no-pager log -n 10 --oneline --graph``` -- mostra apenas a mensagem e o hash do commit com a limitação de 10 commits e um grafico de commits.
 
 - ```git --no-pager log -n 10 --oneline --parents``` -- mostra apenas a mensagem e o hash do commit com a limitação de 10 commits e os pais do commit.
+
+- ```git log -p``` -- **mostra o historico de commits com as mudanças feitas em cada commit.**
+
 
 ## Internals
 
@@ -480,3 +508,37 @@ Nesse processo o git:
 Uma vantagem do merge é que ele preserva o histórico verdadeiro do projeto. Ele mostra quando, onde e como as branches foram mergeadas. Uma desvantagem é que isso cria uma grande quantidade de commits, o que pode tornar o histórico mais difícil de ler e entender.
 
 Um histórico linear geralmente é mais facil de ler, entender e trabalhar com.
+
+## Reset
+
+Um dos grandes benefícios do git é a capacidade de desfazer ações.  O comando ```git reset``` é uma das ferramentas mais poderosas para isso. Ele pode ser usado para desfazer o último commit ou qualquer mudança, seja ela no staging area ou no working directory.
+
+### Git Reset Soft
+
+A opção ``--soft``, é útil quando você quer desfazer seu último commit, mas ainda manter todas as mudanças que você fez no staging area. Mudanças que foram commitadas vão ser desfeitas e colocadas no staging area, enquando mudanças que ainda não foram commitadas, vão permanecer como staged ou unstaged.
+
+```bash
+git reset --soft HEAD~1
+```
+
+- HEAD~1 é uma referência do commit anterior ao commit atual.
+
+Então você desfaz as mudanças, enquanto ainda as mantém disponíveis para serem commitadas novamente.
+
+### Git Reset Hard
+
+Diferente do ``--soft``, o ``--hard`` desfaz as mudanças dos commits, e remove as mudanças do staging area e do working directory que você tem. Então é como se você nunca tivesse feito as mudanças. Ele só não aplica o reset se em arquivos que não estão trackeados na worktree.
+
+Então é útil se você simplismente quiser voltar pra um commit anterior e descartar todas as mudanças que você fez desde então. Ele vai limpar seu index e também seu worktree.
+
+```bash
+git reset --hard HEAD~1
+```
+
+ou
+
+```bash
+git reset <hash do commit>
+```
+
+``git reset --hard`` é um comando poderoso, mas também **perigoso** pois ele vai apagar todas as mudanças que você fez desde o commit que você está resetando, inclusive as que não foram commitadas ainda, fora os arquivos que não estão trackeados na worktree. Então é bom tomar cuidado e ter certeza que você quer fazer isso. 
