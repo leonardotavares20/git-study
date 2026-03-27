@@ -541,4 +541,4 @@ ou
 git reset <hash do commit>
 ```
 
-``git reset --hard`` é um comando poderoso, mas também **perigoso** pois ele vai apagar todas as mudanças que você fez desde o commit que você está resetando, inclusive as que não foram commitadas ainda, fora os arquivos que não estão trackeados na worktree. Então é bom tomar cuidado e ter certeza que você quer fazer isso. 
+``git reset --hard`` é um comando poderoso, mas também **perigoso** pois ele vai apagar todas as mudanças que você fez desde o commit que você está resetando, inclusive as que não foram commitadas ainda, fora os arquivos que não estão trackeados na worktree. Então é bom tomar cuidado e ter certeza que você quer fazer isso.
