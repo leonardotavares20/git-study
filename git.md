@@ -542,3 +542,64 @@ git reset <hash do commit>
 ```
 
 ``git reset --hard`` é um comando poderoso, mas também **perigoso** pois ele vai apagar todas as mudanças que você fez desde o commit que você está resetando, inclusive as que não foram commitadas ainda, fora os arquivos que não estão trackeados na worktree. Então é bom tomar cuidado e ter certeza que você quer fazer isso.
+
+## Remote
+
+Quando você está trabalhando em um projeto, é comum que você queira compartilhar seu trabalho com outras pessoas. Para isso, você pode usar o git remote. O git remote é uma ferramenta que permite que você gerencie as conexões entre o seu repositório local e os repositórios remotos. Eles são repositórios externos com o mesmo histórico do git do seu repositório local.
+Esses repositórios não necessariamente precisam estar hospedados em um Github da vida, pode ser um repositório local, ou em um servidor próprio por exemplo.
+
+
+### Adicionando um Remote
+
+Quando adicinamos um remote, e tratamos ele como "a fonte da verdade", ele é chamado de **origin**.
+
+Como "fonte da verdade", isso quer dizer que você e o seu time vão tratar ele como o repositório verdadeiro ou principal. É onde tem a maioria do código final e aceito pelo time.
+
+Para adicionar um remote, você pode usar o comando ```git remote add```:
+
+```bash
+git remote add origin <uri>
+```
+
+### Fetch
+
+Adicionar um repositório remoto é uma coisa, mas o que acontece se esse repositório remoto for atualizado? Você precisa atualizar o seu repositório local com as mudanças do repositório remoto. Para isso, você pode usar o comando ```git fetch```:
+
+```bash
+git fetch origin
+```
+
+Esse comando vai baixar todas as mudanças do repositório remoto de ```.git//objects``, mas não vai aplicar nenhuma mudança no seu repositório local. Ele só vai atualizar os ponteiros das branches remotas.
+
+### Log Remote
+
+O comando ``git log`` pode ser usado também pra mostrar o histórico de commits de um repositório remoto também. Por exemplo:
+
+```bash
+git log remote/branch
+```
+
+Por exemplo se você quiser ver os commits de uma branch chamada feat/login, você pode usar o comando:
+
+```bash
+git log origin/feat/login
+```
+
+### Merge
+
+Assim como nós podemos mergear branches locais, nós também podemos mergear branches locais com branches remotas. Por exemplo:
+
+```bash
+git merge remote/branch
+```
+
+Mais uma vez com o exemplo da branch ```feat/login```:
+
+```bash
+git merge origin/feat/login
+```
+
+## Github
+
+Enquanto o **Git** é a ferramenta (o motor) que gerencia as versões do seu código localmente, o **GitHub** é uma plataforma de hospedagem de código na nuvem construída em cima do Git. Ele permite que você armazene seus repositórios Git online, colabore com outros desenvolvedores, faça backup dos seus projetos e compartilhe seu código (de forma pública ou privada). 
+Em resumo: o Git é o sistema de controle de versão, e o GitHub é o serviço onde você hospeda seus repositórios Git.
