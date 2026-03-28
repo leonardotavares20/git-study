@@ -1,6 +1,6 @@
 # Git
 
-git é um sistema de controle de versão, que permite que você rastreie e controle as alterações dos arquivos no seu projeto.
+Git é um sistema de controle de versão, que permite que você rastreie e controle as alterações dos arquivos no seu projeto.
 
 ## Repositórios
 
