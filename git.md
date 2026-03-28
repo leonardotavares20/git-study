@@ -561,6 +561,12 @@ Para adicionar um remote, você pode usar o comando ```git remote add```:
 git remote add origin <uri>
 ```
 
+OBS: se você adicionar a opção ``-u``, você vai estar dizendo para o git que você quer que essa branch seja rastreada pela branch remota. Ou seja, quando você rodar ``git pull`` ou ``git push``, o git vai saber qual branch remota ele deve usar. E você não vai precisar mais digitar ``git pull origin main`` ou ``git pull origin master``, basta digitar ``git pull`` ou ``git push``.
+
+```bash
+git remote add -u origin <uri>
+```
+
 ### Fetch
 
 Adicionar um repositório remoto é uma coisa, mas o que acontece se esse repositório remoto for atualizado? Você precisa atualizar o seu repositório local com as mudanças do repositório remoto. Para isso, você pode usar o comando ```git fetch```:
@@ -603,3 +609,13 @@ git merge origin/feat/login
 
 Enquanto o **Git** é a ferramenta (o motor) que gerencia as versões do seu código localmente, o **GitHub** é uma plataforma de hospedagem de código na nuvem construída em cima do Git. Ele permite que você armazene seus repositórios Git online, colabore com outros desenvolvedores, faça backup dos seus projetos e compartilhe seu código (de forma pública ou privada). 
 Em resumo: o Git é o sistema de controle de versão, e o GitHub é o serviço onde você hospeda seus repositórios Git.
+
+### Pull
+
+Quando fazemos o fetch, nós baixamos as mudanças do repositório remoto, mas não aplicamos nenhuma mudança no nosso repositório local. Para aplicar as mudanças no nosso repositório local, nós precisamos usar o comando ```git pull```:
+
+```bash
+git pull origin
+```
+
+Esse comando vai baixar todas as mudanças do repositório remoto de ```.git//objects```, e vai aplicar as mudanças no nosso repositório local. Ele só vai atualizar os ponteiros das branches remotas.
