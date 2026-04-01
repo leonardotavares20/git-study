@@ -639,7 +639,7 @@ git commit -m "alguma mensagem aqui"
 ```
 
 Mas um problema aparece quando nós queremos colocar arquivos no diretório do seu projeto, mas não queremos que eles sejam rastreados ou trackeados pelo Git. O ``.gitignore`` resolve esse problema. Um exemplo é se você trabalha com Javascript, você provavelmente vai querer ignorar o diretório dos ``node_modules``. O ``.gitignore`` pode ignorar arquivos e diretórios. 
-
+ 
 Se você adicionar no arquivo ``.gitignore`` o nome do diretório ``node_modules``, o Git vai ignorar:
 
 - ``node_modules/code.js``
@@ -650,3 +650,68 @@ mas ele não iria ignorar algo como:
 
 - ``src/node_modules_2/code.js``
 - ``src/node_modules_4``
+
+### Nested Gitignore
+
+O seu ``.gitignore`` não necessariamente precisa estar no root do seu projeto. Ele pode estar em qualquer diretório do seu projeto. E ele vai ignorar todos os arquivos e diretórios que estiverem abaixo dele ou no caso os subdiretórios.
+
+por exemplo:
+
+```
+src/
+|--assets/
+|    |--images/
+|    |--styles/
+|    |--.gitignore
+|--node_modules/
+|--.gitignore
+```
+Nesse caso o ``.gitignore`` na pasta ``src/assets`` vai ignorar todos os arquivos e diretórios que estiverem abaixo dele. o mesmo se aplica ao ``.gitignore`` na pasta ``src``.
+
+### Patterns
+
+Os arquivos ``.gitignore`` aceitam patterns, que são como "padrões" de arquivos e diretórios que devem ser ignorados. Por exemplo, se você quiser ignorar todos os arquivos com a extensão ``.log``, você pode adicionar no arquivo ``.gitignore``:
+
+```
+*.log
+```
+
+Isso vai ignorar todos os arquivos com a extensão ``.log``, como:
+
+- ``file.log``
+- ``src/file.log``
+- ``src/node_modules/file.log``
+
+
+#### Wildcards
+
+O caracter ``*`` trigga qualquer quantidade de caracteres, exceto o separador ``/`` . Por exemplo se você quiser ignorar todos os arquivos com ``.txt``, você pode usar o pattern:
+
+```
+*.txt
+```
+
+#### Rooted Patterns
+
+Patterns que começam com ``/`` são ancorados ao diretório onde o ``.gitignore`` está localizado. Por exemplo, se você quiser ignorar um arquivo chamado ```root.js`` no diretório root do projeto, mas não nos subdiretórios:
+
+```
+/root.js
+```
+
+
+#### Negation
+
+Você pode negar um pattern prefixando ele com ``!``. Por exemplo se você quiser ignorar todos os arquivos com ``.txt``, mas não quiser ignorar o arquivo ``root.txt``:
+
+#### Comentários
+
+Os comentários no ``.gitignore`` começam com ``#``.
+
+```
+# Ignora todos os arquivos com .txt
+*.txt
+
+# Mas não ignora o arquivo root.txt
+!root.txt
+```
