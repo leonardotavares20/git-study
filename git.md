@@ -618,4 +618,35 @@ Quando fazemos o fetch, nós baixamos as mudanças do repositório remoto, mas n
 git pull origin
 ```
 
-Esse comando vai baixar todas as mudanças do repositório remoto de ```.git//objects```, e vai aplicar as mudanças no nosso repositório local. Ele só vai atualizar os ponteiros das branches remotas.
+### Pull Requests
+
+No github, uma pull request é uma solicitação de merge de uma branch para outra. Ou seja, você está pedindo para que as mudanças que você fez na sua branch sejam mergeadas na branch de destino.
+
+É muito comum você criar uma branch, fazer as mudanças que você quer, e depois criar uma pull request para que o seu time possa revisar as mudanças e aprovar o merge. Elas permitem que o seu time possa discutir sobre as mudanças, sugerir melhorias, e garantir que as mudanças sejam feitas da melhor forma possível.
+
+## Gitignore
+
+É muito comum ter um workflow parecido como esse em um projeto:
+
+```
+git add .
+```
+```
+git push origin main
+```
+```
+git commit -m "alguma mensagem aqui"
+```
+
+Mas um problema aparece quando nós queremos colocar arquivos no diretório do seu projeto, mas não queremos que eles sejam rastreados ou trackeados pelo Git. O ``.gitignore`` resolve esse problema. Um exemplo é se você trabalha com Javascript, você provavelmente vai querer ignorar o diretório dos ``node_modules``. O ``.gitignore`` pode ignorar arquivos e diretórios. 
+
+Se você adicionar no arquivo ``.gitignore`` o nome do diretório ``node_modules``, o Git vai ignorar:
+
+- ``node_modules/code.js``
+- ``src/node_modules/code.js``
+- ``src/node_modules``
+
+mas ele não iria ignorar algo como:
+
+- ``src/node_modules_2/code.js``
+- ``src/node_modules_4``
