@@ -699,7 +699,6 @@ Patterns que começam com ``/`` são ancorados ao diretório onde o ``.gitignore
 /root.js
 ```
 
-
 #### Negation
 
 Você pode negar um pattern prefixando ele com ``!``. Por exemplo se você quiser ignorar todos os arquivos com ``.txt``, mas não quiser ignorar o arquivo ``root.txt``:
@@ -715,3 +714,12 @@ Os comentários no ``.gitignore`` começam com ``#``.
 # Mas não ignora o arquivo root.txt
 !root.txt
 ```
+
+### O que Ignorar?
+
+Vimos como nós podemos ignorar arquivos, mas o que exatamante você deve ignorar? Algumas regras que você pode seguir nos seus projetos são
+
+- 1 - Ignore coisas que possam ser geradas(exemplo: código compilado, arquivos mimificados, etc.)
+- 2 - Ignore dependências(exemplo: ``node_modules``, ``venv``, ``packages``, etc.)
+- 3 - Ignore coisas que são pessoais ou da forma como você gosta de trabalhar(exemplo: configurações do seu editor)
+- 4 - Ignore coisas que pode ser sensíveis ou perigosas(exemplo: arquivos ``.env``, senhas, chaves de API, etc.)
