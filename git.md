@@ -723,3 +723,29 @@ Vimos como nós podemos ignorar arquivos, mas o que exatamante você deve ignora
 - 2 - Ignore dependências(exemplo: ``node_modules``, ``venv``, ``packages``, etc.)
 - 3 - Ignore coisas que são pessoais ou da forma como você gosta de trabalhar(exemplo: configurações do seu editor)
 - 4 - Ignore coisas que pode ser sensíveis ou perigosas(exemplo: arquivos ``.env``, senhas, chaves de API, etc.)
+
+## Fork
+
+Um **fork** é uma cópia de um repositório que fica na sua conta. Diferente de um clone (que é uma cópia local), o fork reside no servidor do provedor de hospedagem (como o GitHub).
+
+### Para que serve?
+- **Contribuir para projetos Open Source:** Você faz um fork, altera o código no seu repositório e depois envia um *Pull Request* para o projeto original.
+- **Base para novos projetos:** Usar um projeto existente como ponto de partida para algo novo.
+- **Experimentação:** Testar mudanças sem risco de afetar o repositório principal.
+
+### Sincronizando um Fork
+Para manter seu fork atualizado com o repositório original (upstream):
+
+1. Adicione o repositório original como um remote:
+   ```bash
+   git remote add upstream https://github.com/usuario-original/repositorio.git
+   ```
+2. Busque as alterações:
+   ```bash
+   git fetch upstream
+   ```
+3. Faça o merge no seu branch principal:
+   ```bash
+   git merge upstream/main
+   ```
+
