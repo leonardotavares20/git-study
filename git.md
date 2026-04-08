@@ -749,3 +749,62 @@ Para manter seu fork atualizado com o repositório original (upstream):
    git merge upstream/main
    ```
 
+## Git Reflog
+
+O comando ``git reflog`` é parecido com o comando ``git log``, mas como o nome diz, (ref-log ou reference log - registro de referência) ele registra especificamente as mudanças nas **referências** que aconteceram ao longo do tempo.
+
+Ele usa um formato diferente para mostrar o histórico de uma branch ou HEAD, mais focado na quantidade de passos e quais foram esses passos voltando no tempo.
+
+Exemplo:
+
+```bash
+953e35f (HEAD -> main, origin/main) HEAD@{0}: commit: Explicação sobre Git Fork
+5794c23 HEAD@{1}: commit: Configurando o arquivo .gitignore
+48a5e1c HEAD@{2}: commit: Exemplos de patterns no Gitignore
+dd40822 HEAD@{3}: commit: Início da documentação de Gitignore
+793c68a HEAD@{4}: pull: Merge made by the 'ort' strategy.
+b43a7eb HEAD@{5}: commit: Seção de Git Pull e GitHub
+3c43bf7 HEAD@{6}: Branch: renamed refs/heads/master to refs/heads/main
+3c43bf7 HEAD@{8}: commit: Documentando comandos de Remote
+e48f394 HEAD@{9}: commit: Explicando Reset Soft e Hard
+4ee31e6 HEAD@{10}: commit: Início da seção de Reset
+376a4f1 HEAD@{11}: reset: moving to HEAD~1
+```
+
+Então ele mostra todo o histórico de movimentos que você fez nas referências locais(como HEAD), o que te permite até recuperar estados passados que não aparecem no ``git log``.
+
+### Usando Reflog com Merge e Commit-ish
+
+O Reflog não serve apenas para visualização. As entradas que você vê (como `HEAD@{n}`) são tipos de **commit-ish** (referências que apontam para um commit específico). Você pode usar essas referências diretamente em comandos como `merge`.
+
+#### Exemplo: Recuperando um Merge Deletado
+
+Imagine que você deletou uma branch após um merge, mas depois percebeu que precisava de um estado anterior daquela branch que não está mais no histórico do `git log`.
+
+1.  **Encontre a referência no Reflog:**
+    ```bash
+    git reflog
+    # Resultado:
+    # abc1234 HEAD@{0}: merge feature-x: Merge made by the 'ort' strategy.
+    # def5678 HEAD@{1}: checkout: moving from feature-x to main
+    # 9876543 HEAD@{2}: commit: Finalizando feature-x antes do merge
+    ```
+
+2.  **Mergear um estado específico via Reflog:**
+    Se você quiser "refazer" o merge ou trazer as alterações exatamente como elas estavam no commit `9876543` (que era o `HEAD@{2}` naquele momento):
+    ```bash
+    git merge HEAD@{2}
+    ```
+
+#### O que é Commit-ish?
+Um **commit-ish** é qualquer termo que o Git consiga resolver para um ID de commit. Exemplos comuns:
+- Hash completo: `1a2b3c4d...`
+- Hash curto: `1a2b3c4`
+- Nome de branch: `main`, `feature-login`
+- Tags: `v1.0.2`
+- Referências relativas: `HEAD~1` (um commit atrás), `main^^` (dois commits atrás)
+- **Entradas do Reflog:** `HEAD@{5}`, `main@{yesterday}`
+
+Isso torna o `git merge` extremamente flexível, permitindo que você combine estados temporários ou passados de forma cirúrgica.
+
+
