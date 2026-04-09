@@ -807,4 +807,6 @@ Um **commit-ish** é qualquer termo que o Git consiga resolver para um ID de com
 
 Isso torna o `git merge` extremamente flexível, permitindo que você combine estados temporários ou passados de forma cirúrgica.
 
+### Mergeando Conflitos
 
+Quando você está trabalhando em arquivos ou linhas diferentes que o seu time, provavelmente você não vai ter conflitos, mas quando você está trabalhando em uma features nas mesmas linhas de código ou no mesmo arquivo que alguém do seu time também está, aí surgem os conflitos.
