@@ -807,6 +807,38 @@ Um **commit-ish** é qualquer termo que o Git consiga resolver para um ID de com
 
 Isso torna o `git merge` extremamente flexível, permitindo que você combine estados temporários ou passados de forma cirúrgica.
 
-### Mergeando Conflitos
+### Merge Conflicts
 
 Quando você está trabalhando em arquivos ou linhas diferentes que o seu time, provavelmente você não vai ter conflitos, mas quando você está trabalhando em uma features nas mesmas linhas de código ou no mesmo arquivo que alguém do seu time também está, aí surgem os conflitos.
+
+Um merge conflict ocorre quando dois commits, modificam a mesma linha e o Git não pode automaticamente decidir qual das duas mudanças ele vai manter, e qual ele vai descartar.
+
+Vamos dizer que você tem o seguinte histórico:
+
+```bash
+    C - feature
+  /
+A - B - main
+```
+
+A branch ``main`` tem um arquivo com a seguinte função:
+
+```bash
+function square(numero) {
+  return numero * numero;
+}
+```
+
+E na feature o mesmo arquivo e função:
+
+```bash
+function square(numero) {
+  return numero + numero;
+}
+```
+
+Mas note que o retorno da função da feature é diferente.
+
+Se nós mergearmos a branch ``feature`` na branch ``main``, o Git vai detectar que a linha com o``return`` da função mudou nas duas branches de forma independente, o que acaba criando conflito.
+
+Quando um conflito acontece(geralmente como resultado de um ``merge`` ou um ``rebase``) o Git vai te deixar decidir de forma manual, qual das alterações que você vai manter. E tudo vai bem quando a mesma linha é modificada em um commit, e de novo em outro commit. Mas o problema aparece quando a mesma linha é modificado em dois commits que não tem relação ``pai -> filho``.
