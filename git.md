@@ -842,3 +842,37 @@ Mas note que o retorno da função da feature é diferente.
 Se nós mergearmos a branch ``feature`` na branch ``main``, o Git vai detectar que a linha com o``return`` da função mudou nas duas branches de forma independente, o que acaba criando conflito.
 
 Quando um conflito acontece(geralmente como resultado de um ``merge`` ou um ``rebase``) o Git vai te deixar decidir de forma manual, qual das alterações que você vai manter. E tudo vai bem quando a mesma linha é modificada em um commit, e de novo em outro commit. Mas o problema aparece quando a mesma linha é modificado em dois commits que não tem relação ``pai -> filho``.
+
+### Abortando um merge
+
+Se você quiser abortar o merge você pode usar o comando
+
+```bash
+git merge --abort
+```
+
+### Lidando com conflitos
+
+Resolver conflitos é um processo manual, quando eles ocorrem o Git marca os arquivos e linhas conflitantes, e você deve resolver esses conflitos.
+
+No arquivo onde ocorreu o conflito, você deve encontrar algo assim:
+
+```bash
+<<<<<<< HEAD
+jogos do mês: nier automata, ace combat 7, watch dogs
+=======
+Jogos do mês: ace combat 7, nier automata, watch dogs
+>>>>>>> edit-titles
+```
+
+``HEAD`` é a branch atual em que você está
+
+``edit-titles`` é a branch de onde vem as mudanças que vem da branch que está sendo mergeada.
+
+``=======`` esse trecho separa as versões do código das duas branches.
+
+Você pode manter as duas alterações se você quiser, mas geralmente você vai querer deixar só uma alteração e descartar a outra.
+
+### Resolução
+
+Terminando de resolver os conflitos, você precisa adicionar e commitar essas mudanças, isso diz ao Git que o conflito foi resolvido e pode continuar com o merge.
