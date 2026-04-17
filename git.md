@@ -876,3 +876,12 @@ Você pode manter as duas alterações se você quiser, mas geralmente você vai
 ### Resolução
 
 Terminando de resolver os conflitos, você precisa adicionar e commitar essas mudanças, isso diz ao Git que o conflito foi resolvido e pode continuar com o merge.
+
+### Resolvendo conflitos com Checkout
+
+Em situações onde você deseja aceitar integralmente a versão de uma das branches sem precisar editar o arquivo manualmente, o Git oferece as flags `--ours` e `--theirs` através do comando `git checkout`:
+
+- `git checkout --ours <nome-do-arquivo>` -- resolve o conflito mantendo as alterações da sua branch atual (a branch onde você está).
+- `git checkout --theirs <nome-do-arquivo>` -- resolve o conflito mantendo as alterações da branch que está sendo trazida (a branch que você está tentando mergear).
+
+Após utilizar um desses comandos, o arquivo sairá do estado de conflito com o conteúdo da branch escolhida, mas você ainda precisará executar o `git add <nome-do-arquivo>` para marcar a resolução e seguir com o processo de commit do merge.
