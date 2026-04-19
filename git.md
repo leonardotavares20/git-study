@@ -969,3 +969,25 @@ A forma mais comum de realizar o squash é utilizando o **Rebase Interativo**. O
     Ao salvar e fechar o editor, o Git iniciará o processo de fusão e abrirá um novo editor para você configurar a mensagem do commit único resultante. Você pode combinar as mensagens anteriores ou escrever uma mensagem nova e mais limpa.
 
 Após salvar, o histórico do seu repositório terá apenas um único commit contendo todas as alterações que antes estavam espalhadas, tornando o log muito mais fácil de ler.
+
+### Cuidado: Reescrita de Histórico e Repositórios Remotos
+
+É fundamental entender que operações como `squash`, `amend` ou `rebase` **reescrevem o histórico** de commits. Como o Git identifica cada commit através de um hash único (baseado em seu conteúdo, data e pai), ao alterar ou agrupar commits já existentes, novos hashes são gerados, invalidando os antigos.
+
+#### Desincronização com o Remote
+
+Se você já tiver enviado (*push*) os commits originais para um repositório remoto antes de realizar o squash localmente, o seu repositório local e o remoto ficarão desincronizados. O servidor ainda terá a sequência de commits originais, enquanto o seu computador terá um novo commit resultante da fusão, com um hash completamente diferente.
+
+Ao tentar rodar um `git push` comum após o squash, o Git rejeitará a operação. Ele entenderá que a sua branch local e a branch remota divergiram e impedirá o envio para evitar a perda acidental de histórico no servidor.
+
+#### O uso do Force Push
+
+Para sincronizar o repositório remoto com o seu novo histórico reescrito, você precisará forçar a atualização utilizando a flag `--force`:
+
+```bash
+git push origin <nome-da-branch> --force
+```
+
+O **force push** substitui obrigatoriamente o histórico do servidor pelo histórico da sua máquina local, descartando os commits antigos que existiam lá.
+
+**Cuidado:** Esta é uma operação considerada "destrutiva". Se outros desenvolvedores estiverem trabalhando na mesma branch e já tiverem baixado os commits antigos, o `force push` quebrará o fluxo de trabalho deles, pois o histórico em que eles se basearam deixará de existir no servidor. A regra de ouro é: **evite reescrever o histórico e usar force push em branches compartilhadas (como `main` ou `develop`)**. Utilize essas técnicas preferencialmente em suas branches de funcionalidade (*feature branches*) antes de realizar o merge final.
