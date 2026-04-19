@@ -885,3 +885,36 @@ Em situações onde você deseja aceitar integralmente a versão de uma das bran
 - `git checkout --theirs <nome-do-arquivo>` -- resolve o conflito mantendo as alterações da branch que está sendo trazida (a branch que você está tentando mergear).
 
 Após utilizar um desses comandos, o arquivo sairá do estado de conflito com o conteúdo da branch escolhida, mas você ainda precisará executar o `git add <nome-do-arquivo>` para marcar a resolução e seguir com o processo de commit do merge.
+
+### Resolvendo Conflitos com Rebase
+
+O rebase funciona de uma maneira distinta do merge, e isso reflete na forma como os conflitos são apresentados. Quando você inicia um rebase (por exemplo, rodando `git rebase main` dentro da branch `feature`):
+
+1.  O Git muda temporariamente o contexto para a branch **target** (`main`).
+2.  Ele identifica o ponto comum entre as duas branches.
+3.  Ele "desempilha" os commits da sua branch **source** (`feature`) e começa a reaplicá-los, um a um, no topo da branch target.
+
+#### Ours vs Theirs no Rebase
+
+Diferente do merge convencional, no contexto de um rebase os papéis se invertem, o que costuma causar confusão:
+-   **`--ours`**: Representa a branch de destino (target), como a `main`. Isso acontece porque o `HEAD` do Git, durante o rebase, é movido para a branch target para que ela sirva de base para os novos commits que serão aplicados.
+-   **`--theirs`**: Representa a sua branch de origem (source), cujos commits estão sendo "re-comitados" por cima da nova base.
+
+Se houver um conflito, você deve resolvê-lo manualmente, usar o `git add <arquivo>` para marcar a resolução e, em vez de gerar um novo commit, continuar com:
+```bash
+git rebase --continue
+```
+
+### Git rerere
+
+O comando **rerere** (**Re**use **Re**corded **Re**solution) é uma funcionalidade que permite ao Git "lembrar" como você resolveu um conflito anteriormente.
+
+**Por que ele é útil?**
+Em processos de rebase longos, um mesmo conflito pode aparecer repetidas vezes à medida que o Git tenta aplicar vários commits sequenciais que tocam na mesma linha de código. Sem o `rerere`, você teria que resolver o mesmo conflito manualmente em cada commit do rebase.
+
+Com o `rerere` ativado, o Git grava uma "assinatura" do conflito e a forma como você o resolveu. Se o mesmo conflito surgir novamente no futuro, o Git aplica a solução gravada de forma automática, economizando tempo e evitando erros humanos repetitivos.
+
+Para habilitar essa funcionalidade globalmente:
+```bash
+git config --global rerere.enabled true
+```
