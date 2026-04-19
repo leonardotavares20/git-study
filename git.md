@@ -918,3 +918,54 @@ Para habilitar essa funcionalidade globalmente:
 ```bash
 git config --global rerere.enabled true
 ```
+
+## Desfazendo uma Resolução Acidental no Rebase
+
+Se durante um rebase você resolver um conflito de forma incorreta e o commit for gerado (ao prosseguir com o rebase), você pode desfazer essa resolução específica para corrigir ela, sem precisar cancelar todo o processo.
+
+Para voltar um passo e re-resolver o conflito do commit atual:
+
+```bash
+git reset soft HEAD~1
+```
+
+Esse comando remove o último commit aplicado pelo rebase, mas mantém as alterações nos arquivos. Isso permite que você edite o código novamente, aplique a correção adequada, use o `git add` e então continue o fluxo com `git rebase --continue`.
+
+### SQUASHING
+
+Cada time vai ter padrões e opiniões diferentes sobre como usar Git.
+Alguns exigem que todos os pull requests tenham um único commit, enquanto outras preferem ver uma série de commits pequenos e focados.
+
+Se você entrar ou estiver em uma equipe que prefere um único commit, vai precisar saber como "squashar" ou "esmagar" seus commits juntos. E mesmo que você não precise de um único commit, o squash é útil para manter o histórico de commits limpo. Como também se você estiver trabalhando em uma feature que tenha um risco ou que possa ser perigosa, e você separou ela em 12 commits, se der algum problema você precisaria resetar esses 12 commits, se você tiver um squash deles, você só reseta um único commit.
+
+### O que é Squashing?
+
+É exatamente o que parece. Nós pegamos todas as mudanças de uma sequência de commits e as comprimimos em um único commit.
+
+### Fazendo Squash com Rebase Interativo
+
+A forma mais comum de realizar o squash é utilizando o **Rebase Interativo**. O `rebase` permite essa operação porque ele foi desenhado para reescrever o histórico de commits. Ao usar a flag interativa (`-i`), o Git pausa o processo de aplicação dos commits e permite que você edite a lista, mude mensagens ou agrupe vários commits em um só antes de aplicá-los definitivamente no topo da branch.
+
+#### Como aplicar o Squash:
+
+1.  **Inicie o rebase interativo:**
+    Determine quantos commits você quer agrupar a partir do seu estado atual (`HEAD`). Para os últimos 3 commits, por exemplo, use:
+    ```bash
+    git rebase -i HEAD~3
+    ```
+
+2.  **Escolha a ação Squash:**
+    Um editor de texto abrirá listando os commits (do mais antigo para o mais novo). Cada linha começa com a palavra `pick`.
+    -   Mantenha a palavra `pick` no primeiro commit da lista (o mais antigo).
+    -   Substitua a palavra `pick` por `squash` (ou apenas `s`) nos commits abaixo dele que você deseja mesclar.
+
+    ```text
+    pick a1b2c3d commit inicial da feature
+    squash e5f6g7h ajuste de interface
+    squash i9j0k1l correção de erro ortográfico
+    ```
+
+3.  **Edite a mensagem final:**
+    Ao salvar e fechar o editor, o Git iniciará o processo de fusão e abrirá um novo editor para você configurar a mensagem do commit único resultante. Você pode combinar as mensagens anteriores ou escrever uma mensagem nova e mais limpa.
+
+Após salvar, o histórico do seu repositório terá apenas um único commit contendo todas as alterações que antes estavam espalhadas, tornando o log muito mais fácil de ler.
