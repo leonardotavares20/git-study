@@ -931,7 +931,7 @@ git reset soft HEAD~1
 
 Esse comando remove o último commit aplicado pelo rebase, mas mantém as alterações nos arquivos. Isso permite que você edite o código novamente, aplique a correção adequada, use o `git add` e então continue o fluxo com `git rebase --continue`.
 
-### SQUASHING
+## Squash
 
 Cada time vai ter padrões e opiniões diferentes sobre como usar Git.
 Alguns exigem que todos os pull requests tenham um único commit, enquanto outras preferem ver uma série de commits pequenos e focados.
@@ -991,3 +991,25 @@ git push origin <nome-da-branch> --force
 O **force push** substitui obrigatoriamente o histórico do servidor pelo histórico da sua máquina local, descartando os commits antigos que existiam lá.
 
 **Cuidado:** Esta é uma operação considerada "destrutiva". Se outros desenvolvedores estiverem trabalhando na mesma branch e já tiverem baixado os commits antigos, o `force push` quebrará o fluxo de trabalho deles, pois o histórico em que eles se basearam deixará de existir no servidor. A regra de ouro é: **evite reescrever o histórico e usar force push em branches compartilhadas (como `main` ou `develop`)**. Utilize essas técnicas preferencialmente em suas branches de funcionalidade (*feature branches*) antes de realizar o merge final.
+
+## Stash
+
+Já deve ter acontecido alguma vez com você, se você trabalha em equipe, quando você está resolvendo um bug ou então trabalhando em uma feature em uma branch, mas aí aparece algo urgente que você precisa resolver em uma nova branch. Só que você ainda não terminou com as mudanças que você está trabalhando no momento, elas ainda estão em desenvolvimento, e você não quer perder todo o seu trabalho.
+
+Se você não souber o que o stash faz, pra salvar seu trabalho, você talvez criasse um outro clone do seu repositório, mas talvez essa não seja uma boa idéia.
+
+### Git Stash
+
+O comando ``git stash`` grava o estado atual do seu diretório de trabalho, e o index(staging area). É como o copia e cola do deu computador. Ele grava essas mudanças em um lugar seguro e reverte o diretóro de trabalho pra combinar com o seu ``HEAD`` commit(o último commit da sua branch atual).
+
+Para colocar suas alterações em stash e reverter seu working directory ou seu diretório de trabalho para combinar com seu ``HEAD`` use:
+
+```bash
+git stash
+```
+
+uma vez que você colocou suas alteações em stash, se certifique que elas estão seguras listando o seu stash atual, para listar seus stashes use:
+
+```bash
+git stash list
+```
