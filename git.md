@@ -1213,3 +1213,68 @@ Se desejar cancelar o processo e restaurar o estado da branch antes do comando:
 ```bash
 git cherry-pick --abort
 ```
+
+## Git Bisect
+
+O `git bisect` é uma ferramenta de depuração poderosa que utiliza o algoritmo de busca binária para encontrar exatamente qual commit introduziu um bug ou uma regressão no seu projeto. Em vez de verificar manualmente dezenas de commits, o Git divide o histórico ao meio para isolar o problema de forma eficiente.
+
+### O Algoritmo de Busca Binária no Bisect
+
+A busca binária é um algoritmo eficiente para encontrar um item em uma lista ordenada. No caso do Git, a "lista" é o seu histórico de commits (que é tratado como uma sequência linear ordenada pelo tempo).
+
+Sem o `bisect`, você teria que testar cada commit individualmente (busca linear). Se houvesse 1.000 commits entre a última versão conhecida como "boa" e a versão "ruim", você poderia ter que realizar até 1.000 testes manuais.
+
+Com a lógica de busca binária, o Git reduz o esforço logaritmicamente:
+- Para **100** commits, você precisa de no máximo **7** testes.
+- Para **1.000** commits, você precisa de no máximo **10** testes.
+- Para **10.000** commits, apenas **14** testes.
+
+O processo consiste em sempre dividir o intervalo de busca pela metade, descartando a parte do histórico que não contém a origem do erro, até isolar o commit exato.
+
+### Como utilizar o Bisect
+
+1. **Iniciar o processo:**
+   ```bash
+   git bisect start
+   ```
+
+2. **Marcar o commit atual como "ruim" (bad):**
+   Isso informa ao Git que a versão atual do código apresenta o erro.
+   ```bash
+   git bisect bad
+   ```
+
+3. **Marcar um commit antigo como "bom" (good):**
+   Você precisa fornecer o hash de um commit no passado onde você tem certeza absoluta de que o bug ainda não existia.
+   ```bash
+   git bisect good <hash-do-commit-bom>
+   ```
+
+### O Ciclo de Teste
+
+Assim que você define os limites (o ponto bom e o ponto ruim), o Git fará o checkout automático de um commit localizado exatamente no meio desse intervalo. A partir daí, você deve seguir estes passos:
+
+- Teste o código no estado atual (rode a aplicação ou seus testes).
+- Se o bug **ainda existir**, informe ao Git: `git bisect bad`.
+- Se o bug **não existir**, informe ao Git: `git bisect good`.
+
+O Git repetirá esse processo, dividindo o histórico restante ao meio a cada resposta, até que reste apenas um commit. Esse será o "primeiro commit ruim" (*the first bad commit*).
+
+### Finalizando e Retornando
+
+Após identificar o commit culpado, você terá as informações necessárias para corrigir o problema. Para encerrar a sessão de bisect e voltar para a branch onde você estava originalmente, execute:
+
+```bash
+git bisect reset
+```
+
+### Automação com Bisect Run
+
+Se você tiver um script de teste (como um teste unitário automatizado) que retorna `0` quando o código está correto e um valor diferente de `0` quando há erro, você pode automatizar todo o processo de busca:
+
+```bash
+git bisect start HEAD <hash-do-commit-bom>
+git bisect run npm test  # Exemplo usando um script de teste Node.js
+```
+
+O Git fará todos os checkouts e testes sozinho, parando apenas quando encontrar o commit que quebrou o script.
