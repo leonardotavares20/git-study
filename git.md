@@ -1008,8 +1008,133 @@ Para colocar suas alterações em stash e reverter seu working directory ou seu 
 git stash
 ```
 
+usando esse comando você teria um retorno mais ou menos assim:
+
+```bash
+Saved working directory and index state WIP on main: 2677ff2 git stash
+```
+
 uma vez que você colocou suas alteações em stash, se certifique que elas estão seguras listando o seu stash atual, para listar seus stashes use:
 
 ```bash
 git stash list
 ```
+
+rodando ``git stash list`` com o argumento ``-p`` ele retorna as linhas que estão incluídas em cada stash.
+
+retorno de exemplo:
+
+```bash
+git stash list -p
+stash@{0}: WIP on main: 2677ff2 git stash
+
+diff --git a/titles.md b/titles.md
+index f5f2053..8803af7 100644
+--- a/titles.md
++++ b/titles.md
+@@ -3,4 +3,5 @@ new title
+ new line master
+ some text here to commit
+ jogos do mês: nier automata, ace combat 7, watch dogs
+-melhores jogos do mês: routine, enter the gungeon, rise of the tomb raider
+\ No newline at end of file
++melhores jogos do mês: routine, enter the gungeon, rise of the tomb raider
++melhores lançamentos do ano: pragamta, resident evil requiem, mouse p.i for hire
+\ No newline at end of file
+```
+
+### Pop
+
+Stash tem algumas opções, as que você provavelmente mais vai usar são:
+
+```bash
+git stash
+
+git stash pop
+
+git stash list
+```
+
+O comando ``pop`` funciona seguindo a lógica de uma **pilha (stack)**: ele sempre pega o stash mais recente (o `stash@{0}`) para aplicar ao seu working directory e o remove da lista. Por causa desse comportamento de "último a entrar, primeiro a sair", o ideal é evitar acumular muitos stashes para não perder o controle do que está em cada um; manter a pilha curta (ou até apenas um por vez) torna o uso do ``pop`` muito mais simples e intuitivo.
+
+Rodando ``git stash pop``, você deve ter um retorno mais ou menos assim:
+
+```bash
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   git.md
+	modified:   titles.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+Dropped refs/stash@{0} (0c6bdc11cf12816254a660501c4244700a3d9664)
+```
+
+### O que é o stash
+
+O comando ``git stash`` grava suas mudanças em uma **pilha**, um tipo de estrutura de dados. Isso significa que toda vez que você buscar suas mudanças do stash, você sempre vai pegar a mais recente primeiro.
+
+### Adicionando uma mensagem ao Stash
+
+Quando você usa o comando `git stash` simples, o Git salva o estado atual com uma mensagem automática baseada no último commit da branch. À medida que você acumula vários stashes, pode ser difícil lembrar o conteúdo de cada um apenas pelo log padrão. Para facilitar a identificação, você pode adicionar uma mensagem customizada:
+
+```bash
+git stash push -m "descrição das mudanças"
+```
+
+Isso ajuda muito na organização quando você precisa listar seus stashes com `git stash list`, permitindo que você saiba exatamente o que cada item da pilha contém antes de decidir qual aplicar.
+
+### Aplicando, Removendo e Referenciando Stashes
+
+Além do `pop`, existem outros comandos fundamentais para gerenciar sua pilha de stashes:
+
+- ```git stash apply``` -- aplica as alterações salvas no seu diretório de trabalho, mas **não as remove** da pilha. Isso é útil se você quiser aplicar o mesmo conjunto de alterações em múltiplas branches.
+- ```git stash drop``` -- remove um stash específico da sua pilha permanentemente, sem aplicar as mudanças.
+
+#### Referenciando um Stash Específico
+
+Sempre que você executa `git stash list`, você vê identificadores como `stash@{0}`, `stash@{1}`, e assim por diante. Você pode passar esses identificadores como argumento para os comandos `pop`, `apply` ou `drop` para manipular um item específico da pilha, em vez de sempre usar o mais recente (`stash@{0}`).
+
+Exemplo para aplicar um stash específico:
+```bash
+git stash apply stash@{1}
+```
+
+Exemplo para remover um stash específico:
+```bash
+git stash drop stash@{2}
+```
+
+E se você quiser usar o `pop` em um item que não é o topo da pilha:
+```bash
+git stash pop stash@{1}
+```
+
+Isso permite que você gerencie múltiplos contextos de trabalho de forma organizada, escolhendo exatamente qual "recorte" de código deseja restaurar em seu working directory.
+
+## Git Revert
+
+O comando `git revert` é utilizado para desfazer as alterações de um commit específico criando um **novo commit** com o conteúdo inverso. É a maneira mais segura de desfazer mudanças que já foram enviadas para um repositório remoto, pois não reescreve o histórico de commits.
+
+### Revert vs Reset
+
+Enquanto o `git reset` remove ou move commits do histórico (o que pode ser perigoso se a branch for compartilhada), o `git revert` é uma operação "para frente". Ele mantém o histórico original intacto e apenas adiciona a correção como um novo passo na linha do tempo do projeto.
+
+### Executando o Revert
+
+Para reverter um commit específico, você deve identificar o seu hash e executar:
+
+```bash
+git revert <hash-do-commit>
+```
+
+Caso o objetivo seja desfazer o commit mais recente (onde o HEAD aponta), você pode usar:
+
+```bash
+git revert HEAD
+```
+
+Isso abrirá o editor de texto configurado no Git para que você confirme a mensagem do novo commit. Uma vez finalizado, o repositório terá um novo registro que anula o que foi feito anteriormente, mantendo a integridade para todos os colaboradores.
