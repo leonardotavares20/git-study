@@ -1138,3 +1138,44 @@ git revert HEAD
 ```
 
 Isso abrirá o editor de texto configurado no Git para que você confirme a mensagem do novo commit. Uma vez finalizado, o repositório terá um novo registro que anula o que foi feito anteriormente, mantendo a integridade para todos os colaboradores.
+
+## Git Diff
+
+O comando `git diff` é utilizado para visualizar as alterações detalhadas entre diferentes estados do seu repositório. Enquanto o `git status` informa quais arquivos foram modificados, o `git diff` mostra exatamente quais linhas foram adicionadas, removidas ou alteradas.
+
+### Comparando o Working Directory com o Staging Area
+
+Para ver as mudanças que você fez nos arquivos mas que ainda não foram adicionadas ao index (staging area) com o comando `git add`:
+
+```bash
+git diff
+```
+
+### Comparando o Staging Area com o último Commit
+
+Para visualizar as mudanças que já estão no staging area e que farão parte do seu próximo commit:
+
+```bash
+git diff --staged
+```
+
+*(Nota: O comando `git diff --cached` faz exatamente a mesma coisa que `--staged`.)*
+
+### Comparando entre Commits e Branches
+
+Você pode comparar a diferença entre dois commits específicos ou entre duas branches diferentes:
+
+- **Entre commits:**
+  ```bash
+  git diff <hash-1> <hash-2>
+  ```
+- **Entre branches:**
+  ```bash
+  git diff branch-origem branch-destino
+  ```
+
+### Entendendo o Formato
+
+Na saída do comando, o Git utiliza uma convenção de cores e símbolos para facilitar a leitura:
+- Linhas precedidas por **`-`** (geralmente em vermelho) indicam conteúdo que foi removido.
+- Linhas precedidas por **`+`** (geralmente em verde) indicam conteúdo que foi adicionado.
