@@ -1179,3 +1179,37 @@ Você pode comparar a diferença entre dois commits específicos ou entre duas b
 Na saída do comando, o Git utiliza uma convenção de cores e símbolos para facilitar a leitura:
 - Linhas precedidas por **`-`** (geralmente em vermelho) indicam conteúdo que foi removido.
 - Linhas precedidas por **`+`** (geralmente em verde) indicam conteúdo que foi adicionado.
+
+## Git Cherry-pick
+
+O comando `git cherry-pick` permite que você selecione um commit específico de uma branch e o aplique em sua branch atual. É uma forma de "pescar" mudanças pontuais sem a necessidade de realizar um merge ou rebase completo de todo o histórico de uma branch.
+
+### Casos de Uso Comuns
+- **Hotfixes:** Quando um erro é corrigido em uma branch de teste e precisa ser aplicado imediatamente na `main`, sem levar outras funcionalidades que ainda não estão prontas.
+- **Recuperação de commits:** Trazer uma alteração específica de uma branch que será descartada ou de um estado de `detached HEAD`.
+
+### Como usar
+
+Identifique o hash do commit desejado (via `git log`) e, na branch de destino, execute:
+
+```bash
+git cherry-pick <hash-do-commit>
+```
+
+Se não houver conflitos, o Git criará automaticamente um novo commit na sua branch com as mesmas alterações e mensagem do commit original.
+
+### Resolvendo Conflitos
+
+Se houver um conflito durante o processo, o Git parará e solicitará sua intervenção:
+
+1.  Resolva os conflitos manualmente nos arquivos.
+2.  Adicione as mudanças com `git add <arquivo>`.
+3.  Conclua a operação:
+    ```bash
+    git cherry-pick --continue
+    ```
+
+Se desejar cancelar o processo e restaurar o estado da branch antes do comando:
+```bash
+git cherry-pick --abort
+```
