@@ -1278,3 +1278,80 @@ git bisect run npm test  # Exemplo usando um script de teste Node.js
 ```
 
 O Git fará todos os checkouts e testes sozinho, parando apenas quando encontrar o commit que quebrou o script.
+
+## Git Worktree
+
+O comando `git worktree` permite que você tenha múltiplos diretórios de trabalho (working trees) conectados ao mesmo repositório. Em vez de alternar entre branches no mesmo diretório (o que exigiria o uso de `git stash` ou commits temporários), você pode fazer o checkout de uma branch em um diretório totalmente separado.
+
+### Por que usar Worktrees?
+
+- **Context Switching:** Se você está no meio de uma tarefa complexa em uma branch e surge um bug crítico que precisa ser corrigido em outra branch imediatamente, o worktree permite que você abra essa segunda branch em uma nova pasta sem mexer no progresso da branch atual.
+- **Testes Simultâneos:** Você pode ter duas versões diferentes do código abertas lado a lado para comparar comportamentos, rodar testes de performance ou validar mudanças visualmente em tempo real.
+- **Eficiência de Espaço:** Como todos os worktrees compartilham a mesma base de dados (o diretório `.git` original), eles ocupam muito menos espaço em disco do que se você fizesse múltiplos clones do mesmo repositório.
+
+### Comandos Principais
+
+- **Adicionando um Worktree:**
+  Para criar um novo diretório associado a uma branch:
+  ```bash
+  git worktree add ../pasta-do-projeto nome-da-branch
+  ```
+  Isso cria uma pasta chamada `pasta-do-projeto` em um nível acima do diretório atual e faz o checkout da branch nela.
+
+- **Criando uma nova branch com Worktree:**
+  Se a branch ainda não existir, você pode criá-la e adicioná-la ao worktree simultaneamente:
+  ```bash
+  git worktree add -b nova-feature ../pasta-nova-feature
+  ```
+
+- **Listando Worktrees ativos:**
+  Para ver quais diretórios de trabalho estão vinculados ao seu repositório:
+  ```bash
+  git worktree list
+  ```
+
+- **Removendo um Worktree:**
+  Após concluir a tarefa e deletar a pasta fisicamente (ou se quiser que o Git pare de rastreá-la), use:
+  ```bash
+  git worktree remove <nome-do-diretorio>
+  ```
+
+### Restrição Importante
+
+O Git não permite que a **mesma branch** esteja ativa (checked out) em dois worktrees diferentes ao mesmo tempo. Se você tentar fazer isso, o Git emitirá um erro para evitar conflitos no histórico e no estado dos arquivos. Se precisar trabalhar em estados diferentes da mesma branch, o ideal é criar uma branch temporária a partir dela.
+
+## Tags
+
+As tags são referências que apontam para pontos específicos na história do Git. Elas são usadas principalmente para marcar pontos de lançamento (como v1.0, v2.1, etc.) na linha do tempo do seu projeto. Enquanto as branches são móveis (o ponteiro muda a cada novo commit), as tags são, por definição, imutáveis; elas servem como um "marcador fixo" em um commit específico.
+
+Existem dois tipos principais de tags:
+- **Lightweight (Leves):** Funcionam como um ponteiro simples para um commit, sem informações adicionais.
+- **Annotated (Anotadas):** São armazenadas como objetos completos no banco de dados do Git. Elas contêm o nome do criador, e-mail, data e uma mensagem de tag. São as mais recomendadas para versões oficiais de lançamento.
+
+Comandos comuns:
+
+```bash
+# Criar uma tag leve
+git tag v1.0.0
+
+# Criar uma tag anotada
+git tag -a v1.0.0 -m "Versão de lançamento 1.0.0"
+
+# Listar tags existentes
+git tag
+
+# Enviar tags para o repositório remoto (tags não são enviadas por push comum)
+git push origin --tags
+```
+
+### SemVer (Versionamento Semântico)
+
+O **SemVer** (Semantic Versioning) é um conjunto de regras que define como os números de versão são atribuídos e incrementados. O objetivo é dar sentido ao versionamento, facilitando a comunicação entre desenvolvedores sobre o impacto das mudanças no código.
+
+O formato padrão é composto por três números: `MAJOR.MINOR.PATCH` (ex: `1.2.4`):
+
+1.  **MAJOR (Maior):** Incrementado quando você faz mudanças de API que não são compatíveis com versões anteriores (mudanças que "quebram" o código de quem usa).
+2.  **MINOR (Menor):** Incrementado quando você adiciona funcionalidades de maneira compatível com as versões anteriores (novas features que não quebram o que já existe).
+3.  **PATCH (Correção):** Incrementado quando você faz correções de bugs de maneira compatível com as versões anteriores.
+
+Seguir esse padrão ajuda quem consome o seu código ou biblioteca a entender se a atualização de uma versão para outra é segura ou se exigirá ajustes manuais no sistema deles.
